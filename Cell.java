@@ -14,9 +14,9 @@ import java.util.*;
 public class Cell
 {
     // The possible states.
-    public static final int ALIVE = 0, DEAD = 1, DYING = 2;
+    public static final int ALIVE = 0, DEAD = 1;;
     // The number of possible states.
-    public static final int NUM_STATES = 3;
+    public static final int NUM_STATES = 2;
 
     // The cell's state.
     private int state;
