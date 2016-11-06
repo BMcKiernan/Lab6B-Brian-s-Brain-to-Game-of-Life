@@ -5,6 +5,8 @@ import java.util.*;
  * Maintain the environment for a 2D cellular automaton.
  * 
  * @author David J. Barnes
+ * @contributor Brian McKiernan
+ * @date 11/5/2016
  * @version  2016.02.29
  */
 public class Environment
