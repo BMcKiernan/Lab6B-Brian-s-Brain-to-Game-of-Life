@@ -7,14 +7,16 @@ import java.util.*;
  * @see https://en.wikipedia.org/wiki/Brian%27s_Brain
  * 
  * @author David J. Barnes and Michael Kölling
+ * @contributor Brian McKiernan
+ * @date 11/5/2016
  * @version  2016.02.29
  */
 public class Cell
 {
     // The possible states.
-    public static final int ALIVE = 0, DEAD = 1, DYING = 2;
+    public static final int ALIVE = 0, DEAD = 1;;
     // The number of possible states.
-    public static final int NUM_STATES = 3;
+    public static final int NUM_STATES = 2;
 
     // The cell's state.
     private int state;
@@ -47,22 +49,26 @@ public class Cell
      */
     public int getNextState()
     {
-        if(state == DEAD) {
-            // Count the number of neighbors that are alive.
-            int aliveCount = 0;
-            for(Cell n : neighbors) {
-                if(n.getState() == ALIVE) {
-                    aliveCount++;
-                }
+        int aliveCount = 0;
+        //Cell Status default is DEAD and only changes if conditions are met to switch DEAD cell to ALIVE or
+        //the cell is already is ALIVE and meets the conditions to stay ALIVE.
+        int cellStatus = DEAD;
+        for(Cell n : neighbors) {
+            if(n.getState() == ALIVE) {
+                aliveCount++;
             }
-            return aliveCount == 2 ? ALIVE : DEAD;
         }
-        else if(state == DYING) {
-            return DEAD;
+        //If cell status is DEAD and there are three living neighbor cells, the cell status switches to ALIVE
+        if(state == DEAD) {
+            if(aliveCount==3)
+                cellStatus=ALIVE; 
         }
-        else {
-            return DYING;
+        //If cell status is ALIVE and there are three two or three living neighbor cells, cell status is ALIVE.
+        if(state == ALIVE) {
+            if(aliveCount==2||aliveCount==3)
+                cellStatus=ALIVE;
         }
+        return cellStatus;
     }
     
     /**

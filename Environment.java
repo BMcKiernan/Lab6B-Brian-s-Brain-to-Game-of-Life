@@ -5,6 +5,8 @@ import java.util.*;
  * Maintain the environment for a 2D cellular automaton.
  * 
  * @author David J. Barnes
+ * @contributor Brian McKiernan
+ * @date 11/5/2016
  * @version  2016.02.29
  */
 public class Environment
@@ -115,14 +117,18 @@ public class Environment
     
     /**
      * Setup a new environment of the given size.
-     * @param numRows The number of rows.
-     * @param numCols The number of cols;
+     * @param numRows The number of rows (+ 2 dummy rows).
+     * @param numCols The number of cols (+ 2 dummy columns);
+     * Modified for Method Exercise 7-39 to make sure there will be 
+     * neighbors for the rows and columns passed. See param parenthesis.
      */
     private void setup(int numRows, int numCols)
     {
-        cells = new Cell[numRows][numCols];
-        for(int row = 0; row < numRows; row++) {
-            for (int col = 0; col < numCols; col++) {
+        //The two rows and columns added below and in the for loop
+        //are two create two unseen row and columns of dummy cells.
+        cells = new Cell[numRows+2][numCols+2];
+        for(int row = 0; row < numRows+2; row++) {
+            for (int col = 0; col < numCols+2; col++) {
                 cells[row][col] = new Cell();
             }
         }
@@ -131,21 +137,41 @@ public class Environment
     
     /**
      * Give to a cell a list of its neighbors.
+     * setupNeighbors method has two rows and columns subtracted from 
+     * row-length and column-length so that neighbors will only be found
+     * for the specified number of rows/columns passed upon initialization.
+     * 
+     * Also the initialization of the nr and nc variables in the two 
+     * innermost for-loops have had their value-assigning code changed
+     * so the neighbors for the last row and column are not assigned the 
+     * initial rows and columns and therefore the cells do not exist 
+     * on a torus.
      */
     private void setupNeighbors()
     {
-        int numRows = cells.length;
-        int numCols = cells[0].length;
-        // Allow for 8 neighbors plus the cell.
-        ArrayList<Cell> neighbors = new ArrayList<>(9);
-        for(int row = 0; row < numRows; row++) {
-            for(int col = 0; col < numCols; col++) {
+        //Subtract the two dummy rows & columns from respective lengths.
+        int numRows = -2+(cells.length);
+        int numCols = -2+(cells[0].length);
+        //UnComment the bottom row for debugging - to make sure rows
+        //and columns are equal to the number passed upon initialization.
+        //System.out.println("numRows- "+numRows+" numColumns- "+numCols);
+        //Neighbors ArrayList does not need a set size.
+        ArrayList<Cell> neighbors = new ArrayList<Cell>();
+        for(int row = 1; row <= numRows; row++) {
+            for(int col = 1; col <= numCols; col++) {
                 Cell cell = cells[row][col];
+                /*
+                 * If the program is giving a null pointer exception
+                 * and degbugging is needed to locate the 
+                 * cell-neighbors region throwing the exception 
+                 * uncomment println below.
+                 */
+                //System.out.println("Row - " +row+ " Col - " +col);
                 // This process will also include the cell.
                 for(int dr = -1; dr <= 1; dr++) {
                     for(int dc = -1; dc <= 1; dc++) {
-                        int nr = (numRows + row + dr) % numRows;
-                        int nc = (numCols + col + dc) % numCols;
+                        int nr = (row + dr);
+                        int nc = (col + dc);
                         neighbors.add(cells[nr][nc]);
                     }
                 }
